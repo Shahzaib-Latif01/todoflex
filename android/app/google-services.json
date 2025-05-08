@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "921360040103",
+    "project_id": "todoflex-app-shahzaib-2b579",
+    "storage_bucket": "todoflex-app-shahzaib-2b579.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921360040103:android:882ac8a968552dbfb3db82",
+        "android_client_info": {
+          "package_name": "com.example.todoflex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxmxlCYERvc0rZ5c4SvdErWOnDbpr2jhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

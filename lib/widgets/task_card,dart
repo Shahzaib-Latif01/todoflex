@@ -1,0 +1,51 @@
+// task_card.dart
+import 'package:flutter/material.dart';
+import '../models/task_model.dart';
+import '../screens/add_task_screen.dart';
+import '../services/firebase_service.dart';
+
+class TaskCard extends StatelessWidget {
+  final TaskModel task;
+
+  const TaskCard({super.key, required this.task});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: Checkbox(
+          value: task.isDone,
+          onChanged: (val) async {
+            await FirebaseService().updateTaskStatus(task.id, val ?? false);
+          },
+        ),
+        title: Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(task.description),
+        trailing: Wrap(
+          spacing: 10,
+          children: [
+            Text(task.category, style: const TextStyle(color: Colors.grey)),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AddTaskScreen(existingTask: task),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () async {
+                await FirebaseService().deleteTask(task.id);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

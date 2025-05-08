@@ -1,0 +1,29 @@
+name: flutter_application_1
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Add your dependencies here
+  cupertino_icons: ^1.0.8
+  sqflite: ^2.3.0
+  path_provider: ^2.1.0
+  uuid: ^4.3.3
+  cloud_firestore: ^4.15.9
+  firebase_core: ^2.27.1
+  firebase_auth: ^4.17.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
