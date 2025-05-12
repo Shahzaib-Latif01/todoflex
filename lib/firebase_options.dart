@@ -21,13 +21,25 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -42,47 +54,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew',
-    appId: '1:921360040103:web:27c2da1791e758f6b3db82',
+    appId: '1:921360040103:web:c4991c5c6a61e525b3db82',
     messagingSenderId: '921360040103',
     projectId: 'todoflex-app-shahzaib-2b579',
     authDomain: 'todoflex-app-shahzaib-2b579.firebaseapp.com',
     storageBucket: 'todoflex-app-shahzaib-2b579.firebasestorage.app',
-    measurementId: 'G-D494F911PR',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew',
-    appId: '1:921360040103:web:27c2da1791e758f6b3db82',
-    messagingSenderId: '921360040103',
-    projectId: 'todoflex-app-shahzaib-2b579',
-    storageBucket: 'todoflex-app-shahzaib-2b579.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew',
-    appId: '1:921360040103:web:27c2da1791e758f6b3db82',
-    messagingSenderId: '921360040103',
-    projectId: 'todoflex-app-shahzaib-2b579',
-    storageBucket: 'todoflex-app-shahzaib-2b579.firebasestorage.app',
-    iosClientId: 'YOUR-IOS-CLIENT-ID',
-    iosBundleId: 'com.example.todoflex',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew',
-    appId: '1:921360040103:web:27c2da1791e758f6b3db82',
-    messagingSenderId: '921360040103',
-    projectId: 'todoflex-app-shahzaib-2b579',
-    storageBucket: 'todoflex-app-shahzaib-2b579.firebasestorage.app',
-    iosClientId: 'YOUR-MACOS-CLIENT-ID',
-    iosBundleId: 'com.example.todoflex',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew',
-    appId: '1:921360040103:web:27c2da1791e758f6b3db82',
-    messagingSenderId: '921360040103',
-    projectId: 'todoflex-app-shahzaib-2b579',
-    storageBucket: 'todoflex-app-shahzaib-2b579.firebasestorage.app',
+    measurementId: 'G-VWKR3ETH3Z',
   );
 }

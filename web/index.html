@@ -40,11 +40,28 @@
   <script src="flutter.js" defer></script>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
   <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_BuTNxXOXKcKI_S2O16VZ6AoRysM7pew",
+      authDomain: "todoflex-app-shahzaib-2b579.firebaseapp.com",
+      projectId: "todoflex-app-shahzaib-2b579",
+      storageBucket: "todoflex-app-shahzaib-2b579.firebasestorage.app",
+      messagingSenderId: "921360040103",
+      appId: "1:921360040103:web:27c2da1791e758f6b3db82",
+      measurementId: "G-D494F911PR"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({

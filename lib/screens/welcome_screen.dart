@@ -21,29 +21,39 @@ class WelcomeScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Welcome to ToDoFlex',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // App Logo/Icon
+                const Icon(
+                  Icons.check_circle_outline,
+                  size: 100,
+                  color: Colors.white,
+                ),
+                const SizedBox(height: 20),
+                // App Name
+                const Text(
+                  'ToDoFlex',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Your Personal Task Manager',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white70,
-                    ),
+                ),
+                const SizedBox(height: 10),
+                // App Tagline
+                const Text(
+                  'Manage your tasks efficiently',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
                   ),
-                  const SizedBox(height: 48),
-                  ElevatedButton(
+                ),
+                const SizedBox(height: 50),
+                // Login Button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -53,14 +63,11 @@ class WelcomeScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
                       foregroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 48,
-                        vertical: 16,
-                      ),
+                      backgroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Text(
@@ -68,8 +75,12 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  OutlinedButton(
+                ),
+                const SizedBox(height: 20),
+                // Register Button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: OutlinedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -81,12 +92,9 @@ class WelcomeScreen extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
                       side: const BorderSide(color: Colors.white),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 48,
-                        vertical: 16,
-                      ),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Text(
@@ -94,8 +102,8 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

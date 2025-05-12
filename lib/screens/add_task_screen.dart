@@ -1,11 +1,11 @@
 // add_task_screen.dart
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../models/task_model.dart';
-import '../services/firebase_service.dart';
+import 'package:provider/provider.dart';
+import '../models/task.dart';
+import '../services/task_service.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  final TaskModel? existingTask;
+  final Task? existingTask;
 
   const AddTaskScreen({super.key, this.existingTask});
 
@@ -17,11 +17,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  String _selectedCategory = 'Personal';
-  DateTime _selectedDate = DateTime.now();
-  TaskPriority _selectedPriority = TaskPriority.medium;
-  final FirebaseService _firebaseService = FirebaseService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  DateTime _dueDate = DateTime.now();
+  TaskPriority _priority = TaskPriority.medium;
+  String _category = 'Personal';
 
   final List<String> _categories = [
     'Personal',
@@ -37,9 +35,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (widget.existingTask != null) {
       _titleController.text = widget.existingTask!.title;
       _descriptionController.text = widget.existingTask!.description;
-      _selectedCategory = widget.existingTask!.category;
-      _selectedDate = widget.existingTask!.dueDate;
-      _selectedPriority = widget.existingTask!.priority;
+      _dueDate = widget.existingTask!.dueDate;
+      _priority = widget.existingTask!.priority;
+      _category = widget.existingTask!.category;
     }
   }
 
@@ -53,72 +51,36 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: _dueDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _dueDate) {
       setState(() {
-        _selectedDate = picked;
+        _dueDate = picked;
       });
     }
   }
 
-  Color _getPriorityColor(TaskPriority priority) {
-    switch (priority) {
-      case TaskPriority.low:
-        return Colors.green;
-      case TaskPriority.medium:
-        return Colors.orange;
-      case TaskPriority.high:
-        return Colors.red;
-    }
-  }
-
-  void _saveTask() async {
+  void _saveTask() {
     if (_formKey.currentState!.validate()) {
-      final userId = _auth.currentUser?.uid;
-      if (userId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('You must be logged in to create tasks'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-
-      final task = TaskModel(
+      final taskService = Provider.of<TaskService>(context, listen: false);
+      final task = Task(
         id: widget.existingTask?.id,
         title: _titleController.text,
         description: _descriptionController.text,
-        category: _selectedCategory,
-        dueDate: _selectedDate,
-        isCompleted: widget.existingTask?.isCompleted ?? false,
-        userId: userId,
-        priority: _selectedPriority,
+        dueDate: _dueDate,
+        priority: _priority,
+        category: _category,
       );
 
-      try {
-        if (widget.existingTask != null) {
-          await _firebaseService.updateTask(task);
-        } else {
-          await _firebaseService.addTask(task);
-        }
-
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+      if (widget.existingTask != null) {
+        taskService.updateTask(task);
+      } else {
+        taskService.addTask(task);
       }
+
+      Navigator.pop(context);
     }
   }
 
@@ -127,12 +89,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.existingTask != null ? 'Edit Task' : 'Add Task'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
                 controller: _titleController,
@@ -163,69 +128,72 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                decoration: const InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(),
+              InkWell(
+                onTap: () => _selectDate(context),
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Due Date',
+                    border: OutlineInputBorder(),
+                  ),
+                  child: Text(
+                    '${_dueDate.year}-${_dueDate.month.toString().padLeft(2, '0')}-${_dueDate.day.toString().padLeft(2, '0')}',
+                  ),
                 ),
-                items: _categories.map((String category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _selectedCategory = newValue;
-                    });
-                  }
-                },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<TaskPriority>(
-                value: _selectedPriority,
+                value: _priority,
                 decoration: const InputDecoration(
                   labelText: 'Priority',
                   border: OutlineInputBorder(),
                 ),
-                items: TaskPriority.values.map((TaskPriority priority) {
-                  return DropdownMenuItem<TaskPriority>(
+                items: TaskPriority.values.map((priority) {
+                  return DropdownMenuItem(
                     value: priority,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          color: _getPriorityColor(priority),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(priority.name.toUpperCase()),
-                      ],
-                    ),
+                    child: Text(priority.toString().split('.').last),
                   );
                 }).toList(),
-                onChanged: (TaskPriority? newValue) {
-                  if (newValue != null) {
+                onChanged: (value) {
+                  if (value != null) {
                     setState(() {
-                      _selectedPriority = newValue;
+                      _priority = value;
                     });
                   }
                 },
               ),
               const SizedBox(height: 16),
-              ListTile(
-                title: const Text('Due Date'),
-                subtitle: Text(_selectedDate.toString().split(' ')[0]),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: () => _selectDate(context),
+              DropdownButtonFormField<String>(
+                value: _category,
+                decoration: const InputDecoration(
+                  labelText: 'Category',
+                  border: OutlineInputBorder(),
+                ),
+                items: _categories.map((category) {
+                  return DropdownMenuItem(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _category = value;
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveTask,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
                 child: Text(
-                    widget.existingTask != null ? 'Update Task' : 'Add Task'),
+                  widget.existingTask != null ? 'Update Task' : 'Add Task',
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
