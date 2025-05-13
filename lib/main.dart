@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'services/auth_service.dart';
 import 'services/task_service.dart';
 import 'screens/welcome_screen.dart';
@@ -27,14 +26,11 @@ void main() async {
     print('Error initializing Firebase: $e');
   }
 
-  final prefs = await SharedPreferences.getInstance();
-  runApp(MyApp(prefs: prefs));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final SharedPreferences prefs;
-
-  const MyApp({super.key, required this.prefs});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +40,7 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthService(),
         ),
         ChangeNotifierProvider<TaskService>(
-          create: (_) => TaskService(prefs),
+          create: (_) => TaskService(),
         ),
       ],
       child: MaterialApp(

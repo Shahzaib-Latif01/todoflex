@@ -10,6 +10,7 @@ class Task {
   bool isCompleted;
   TaskPriority priority;
   String category;
+  final String userId;
 
   Task({
     String? id,
@@ -19,6 +20,7 @@ class Task {
     this.isCompleted = false,
     this.priority = TaskPriority.medium,
     required this.category,
+    required this.userId,
   }) : id = id ?? const Uuid().v4();
 
   Map<String, dynamic> toJson() {
@@ -30,6 +32,7 @@ class Task {
       'isCompleted': isCompleted,
       'priority': priority.toString().split('.').last,
       'category': category,
+      'userId': userId,
     };
   }
 
@@ -45,6 +48,7 @@ class Task {
         orElse: () => TaskPriority.medium,
       ),
       category: json['category'],
+      userId: json['userId'],
     );
   }
 }

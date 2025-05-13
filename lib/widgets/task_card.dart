@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/task_model.dart';
+import '../models/task.dart';
 
 class TaskCard extends StatelessWidget {
-  final TaskModel task;
+  final Task task;
   final VoidCallback onDelete;
   final VoidCallback onToggleComplete;
   final VoidCallback onEdit;

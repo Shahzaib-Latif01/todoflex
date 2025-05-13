@@ -1,6 +1,7 @@
 // add_task_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/task.dart';
 import '../services/task_service.dart';
 
@@ -65,6 +66,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   void _saveTask() {
     if (_formKey.currentState!.validate()) {
       final taskService = Provider.of<TaskService>(context, listen: false);
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not authenticated')),
+        );
+        return;
+      }
       final task = Task(
         id: widget.existingTask?.id,
         title: _titleController.text,
@@ -72,6 +80,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         dueDate: _dueDate,
         priority: _priority,
         category: _category,
+        userId: userId,
       );
 
       if (widget.existingTask != null) {
